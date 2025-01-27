@@ -1,0 +1,442 @@
+\documentclass[10pt, letterpaper]{article}
+
+% Packages:
+\usepackage[
+    ignoreheadfoot, % set margins without considering header and footer
+    top=2 cm, % seperation between body and page edge from the top
+    bottom=2 cm, % seperation between body and page edge from the bottom
+    left=2 cm, % seperation between body and page edge from the left
+    right=2 cm, % seperation between body and page edge from the right
+    footskip=1.0 cm, % seperation between body and footer
+    % showframe % for debugging 
+]{geometry} % for adjusting page geometry
+\usepackage{titlesec} % for customizing section titles
+\usepackage{tabularx} % for making tables with fixed width columns
+\usepackage{array} % tabularx requires this
+\usepackage[dvipsnames]{xcolor} % for coloring text
+\definecolor{primaryColor}{RGB}{0, 79, 144} % define primary color
+\usepackage{enumitem} % for customizing lists
+\usepackage{fontawesome5} % for using icons
+\usepackage{amsmath} % for math
+\usepackage[
+    pdftitle={John Doe's CV},
+    pdfauthor={John Doe},
+    pdfcreator={LaTeX with RenderCV},
+    colorlinks=true,
+    urlcolor=primaryColor
+]{hyperref} % for links, metadata and bookmarks
+\usepackage[pscoord]{eso-pic} % for floating text on the page
+\usepackage{calc} % for calculating lengths
+\usepackage{bookmark} % for bookmarks
+\usepackage{lastpage} % for getting the total number of pages
+\usepackage{changepage} % for one column entries (adjustwidth environment)
+\usepackage{paracol} % for two and three column entries
+\usepackage{ifthen} % for conditional statements
+\usepackage{needspace} % for avoiding page brake right after the section title
+\usepackage{iftex} % check if engine is pdflatex, xetex or luatex
+
+% Ensure that generate pdf is machine readable/ATS parsable:
+\ifPDFTeX
+    \input{glyphtounicode}
+    \pdfgentounicode=1
+    % \usepackage[T1]{fontenc} % this breaks sb2nov
+    \usepackage[utf8]{inputenc}
+    \usepackage{lmodern}
+\fi
+
+
+
+% Some settings:
+\AtBeginEnvironment{adjustwidth}{\partopsep0pt} % remove space before adjustwidth environment
+\pagestyle{empty} % no header or footer
+\setcounter{secnumdepth}{0} % no section numbering
+\setlength{\parindent}{0pt} % no indentation
+\setlength{\topskip}{0pt} % no top skip
+\setlength{\columnsep}{0cm} % set column seperation
+\makeatletter
+\let\ps@customFooterStyle\ps@plain % Copy the plain style to customFooterStyle
+\patchcmd{\ps@customFooterStyle}{\thepage}{
+    \color{gray}\textit{\small John Doe - Page \thepage{} of \pageref*{LastPage}}
+}{}{} % replace number by desired string
+\makeatother
+\pagestyle{customFooterStyle}
+
+\titleformat{\section}{\needspace{4\baselineskip}\bfseries\large}{}{0pt}{}[\vspace{1pt}\titlerule]
+
+\titlespacing{\section}{
+    % left space:
+    -1pt
+}{
+    % top space:
+    0.3 cm
+}{
+    % bottom space:
+    0.2 cm
+} % section title spacing
+
+\renewcommand\labelitemi{$\circ$} % custom bullet points
+\newenvironment{highlights}{
+    \begin{itemize}[
+        topsep=0.10 cm,
+        parsep=0.10 cm,
+        partopsep=0pt,
+        itemsep=0pt,
+        leftmargin=0.4 cm + 10pt
+    ]
+}{
+    \end{itemize}
+} % new environment for highlights
+
+\newenvironment{highlightsforbulletentries}{
+    \begin{itemize}[
+        topsep=0.10 cm,
+        parsep=0.10 cm,
+        partopsep=0pt,
+        itemsep=0pt,
+        leftmargin=10pt
+    ]
+}{
+    \end{itemize}
+} % new environment for highlights for bullet entries
+
+
+\newenvironment{onecolentry}{
+    \begin{adjustwidth}{
+        0.2 cm + 0.00001 cm
+    }{
+        0.2 cm + 0.00001 cm
+    }
+}{
+    \end{adjustwidth}
+} % new environment for one column entries
+
+\newenvironment{twocolentry}[2][]{
+    \onecolentry
+    \def\secondColumn{#2}
+    \setcolumnwidth{\fill, 4.5 cm}
+    \begin{paracol}{2}
+}{
+    \switchcolumn \raggedleft \secondColumn
+    \end{paracol}
+    \endonecolentry
+} % new environment for two column entries
+
+\newenvironment{header}{
+    \setlength{\topsep}{0pt}\par\kern\topsep\centering\linespread{1.5}
+}{
+    \par\kern\topsep
+} % new environment for the header
+
+\newcommand{\placelastupdatedtext}{% \placetextbox{<horizontal pos>}{<vertical pos>}{<stuff>}
+  \AddToShipoutPictureFG*{% Add <stuff> to current page foreground
+    \put(
+        \LenToUnit{\paperwidth-2 cm-0.2 cm+0.05cm},
+        \LenToUnit{\paperheight-1.0 cm}
+    ){\vtop{{\null}\makebox[0pt][c]{
+        \small\color{gray}\textit{Last updated in September 2024}\hspace{\widthof{Last updated in September 2024}}
+    }}}%
+  }%
+}%
+
+% save the original href command in a new command:
+\let\hrefWithoutArrow\href
+
+% new command for external links:
+\renewcommand{\href}[2]{\hrefWithoutArrow{#1}{\ifthenelse{\equal{#2}{}}{ }{#2 }\raisebox{.15ex}{\footnotesize \faExternalLink*}}}
+
+
+\begin{document}
+    \newcommand{\AND}{\unskip
+        \cleaders\copy\ANDbox\hskip\wd\ANDbox
+        \ignorespaces
+    }
+    \newsavebox\ANDbox
+    \sbox\ANDbox{}
+
+    \placelastupdatedtext
+    \begin{header}
+        \textbf{\fontsize{24 pt}{24 pt}\selectfont ANJANAY}
+
+        \vspace{0.3 cm}
+
+        \normalsize
+        \mbox{{\color{black}\footnotesize\faMapMarker*}\hspace*{0.13cm}Patna,Bihar}%
+        \kern 0.25 cm%
+        \AND%
+        \kern 0.25 cm%
+        \mbox{\hrefWithoutArrow{mailto:anjanaymahnar@gmail.com}{\color{black}{\footnotesize\faEnvelope[regular]}\hspace*{0.13cm}anjanaymahnar@gmail.com}}%
+        \kern 0.25 cm%
+        \AND%
+        \kern 0.25 cm%
+        \mbox{\hrefWithoutArrow{tel:+91-7362012010}{\color{black}{\footnotesize\faPhone*}\hspace*{0.13cm}91-7362012010}}%
+        \kern 0.25 cm%
+        \AND%
+        \kern 0.25 cm%
+        \mbox{\hrefWithoutArrow{https://yourwebsite.com/}{\color{black}{\footnotesize\faLink}\hspace*{0.13cm}yourwebsite.com}}%
+        \kern 0.25 cm%
+        \AND%
+        \kern 0.25 cm%
+        \mbox{\hrefWithoutArrow{https://linkedin.com/in/yourusername}{\color{black}{\footnotesize\faLinkedinIn}\hspace*{0.13cm}yourusername}}%
+        \kern 0.25 cm%
+        \AND%
+        \kern 0.25 cm%
+        \mbox{\hrefWithoutArrow{https://github.com/yourusername}{\color{black}{\footnotesize\faGithub}\hspace*{0.13cm}yourusername}}%
+    \end{header}
+
+    \vspace{0.3 cm - 0.3 cm}
+
+
+    \section{Summary  }
+
+
+
+        
+        \begin{onecolentry}
+         Dedicated and results-driven .NET developer with 2.5 years of hands-on experience in designing, developing, and maintaining software applications. Proficient in C\# and the .NET framework, with a strong track record of delivering high-quality solutions that meet client needs and exceed expectations. Adept at collaborating with cross-functional teams and leveraging expertise in web and application development to drive project success. 
+        \end{onecolentry}
+
+        \vspace{0.2 cm}
+
+        \begin{onecolentry}
+            
+        \end{onecolentry}
+
+
+    
+    \section{Work Experience }
+
+    \begin{twocolentry}{
+        Bengaluru     
+            
+        \textit{May 2022-Present }}
+            \textbf{Software Engineer}
+            
+            \textit{Wipro Technologies }
+        \end{twocolentry}
+
+        \vspace{0.10 cm}
+        \begin{onecolentry}
+            \begin{highlights}
+                \item Worked in an Agile/Scrum environment, contributing to sprint planning, daily stand-ups, and retrospectives to foster a collaborative development process.  
+                \item Collaborated closely with cross-functional teams to gather requirements, design technical solutions, and ensure project success 
+                \item Developed and maintained web applications using ASP.NET, ASP.NET Core, and C\# to deliver scalable and user-friendly solutions.  
+                    \item Conducted thorough unit testing and participated in code reviews to ensure code quality and adherence to best practices 
+                       \item Participated in the implementation of CI/CD pipelines, streamlining the deployment process and increasing development 
+
+                    efficiency.  
+            \end{highlights}
+        \end{onecolentry}
+
+
+        \vspace{0.2 cm}
+
+        \begin{twocolentry}{
+        Noida     
+            
+        \textit{Dec 2020-Apr 2022 }}
+            \textbf{Analyst}
+            
+            \textit{HCL Technologies }
+        \end{twocolentry}
+
+        \vspace{0.10 cm}
+        \begin{onecolentry}
+            \begin{highlights}
+                \item Provided IT support to a foreign client, ensuring timely resolution of technical issues and maintaining high levels of client satisfaction. 
+                \item Managed and resolved incidents and service requests using \textbf{ServiceNow}, ensuring SLA adherence. 
+                \item Handled \textbf{SAP access} management, including creation of user accounts, assignment of roles, and troubleshooting access issues. 
+                \item Administered \textbf{Active Directory (AD)} operations such as account creation, password resets, group memberships, and user deactivation for efficient IT resource management. 
+                \item Collaborated with cross-functional teams to identify and resolve system access issues, contributing to process improvements. 
+            \end{highlights}
+        \end{onecolentry}
+
+    \section{Education}
+
+
+
+        
+        \begin{twocolentry}{
+            
+            
+        \textit{2016-2020 }}
+            \textbf{Uttarakhand Technical University. }
+
+            \textit{B.Tech (Elec. \& Telecomm)  }
+        \end{twocolentry}
+
+        \vspace{0.10 cm}
+        \begin{onecolentry}
+            \begin{highlights}
+                \item Marks: 71/100 
+                
+            \end{highlights}
+        \end{onecolentry}
+
+
+
+    
+ 
+
+
+    
+   
+    
+    \section{Projects}
+
+
+
+        
+        \begin{twocolentry}{
+            
+            
+        \textit{\href{https://github.com/sinaatalay/rendercv}{github.com/name/repo}}}
+            \textbf{E-Commerce Web App:}
+        \end{twocolentry}
+
+        \vspace{0.10 cm}
+        \begin{onecolentry}
+            \begin{highlights}
+                \item Build a real-world e-commerce application using ASP.NET Core MVC, Entity Framework Core, SQL Server and ASP.NET Core Identity
+                \item Implemented the design pattern concepts of Repository pattern- UnitOfWork -Dependency Injection.
+                \item Implemented authentication and authorization using JWT tokens and ASP.NET Identity.
+                \item Integrated payment gateways (Stripe) for seamless transactions.
+                
+            \end{highlights}
+        \end{onecolentry}
+
+
+        \vspace{0.2 cm}
+
+        \begin{twocolentry}{
+            
+            
+        \textit{\href{https://github.com/sinaatalay/rendercv}{github.com/name/repo}}}
+            \textbf{Weather Forecast Application: }
+        \end{twocolentry}
+
+        \vspace{0.10 cm}
+        \begin{onecolentry}
+            \begin{highlights}
+                \item Developed a dynamic \textbf{search feature} using \textbf{ASP.NET Core Web API} to fetch real-time weather data from third-party APIs (e.g. OpenWeatherMap API). 
+                \item Displayed \textbf{detailed weather information} including wind speed, humidity, pressure, sunrise/sunset, and a 7-day forecast using \textbf{Angular}. 
+                \item Designed weather condition visualizations with icons for different conditions (cloudy, rainy, sunny, etc.) for better user engagement. 
+                \item Created an \textbf{admin dashboard} to manage search logs and application data, improving transparency and operational control. 
+                \item Implemented \textbf{role-based access control} for secure user and admin access, and utilized \textbf{Entity Framework Core} to store search logs and user data in \textbf{SQL Server}. 
+            \end{highlights}
+        \end{onecolentry}
+
+
+        \vspace{0.2 cm}
+
+        \begin{twocolentry}{
+            
+            
+        \textit{2002}}
+            \textbf{Custom Operating System}
+        \end{twocolentry}
+
+        \vspace{0.10 cm}
+        \begin{onecolentry}
+            \begin{highlights}
+                \item Built a UNIX-style OS with a scheduler, file system, text editor, and calculator
+                \item Tools Used: C
+            \end{highlights}
+        \end{onecolentry}
+
+
+
+    
+    \section{Technologies}
+
+
+
+        
+        \begin{onecolentry}
+            \textbf{Languages:} C++, C, Java, Objective-C, C\#, SQL, JavaScript
+        \end{onecolentry}
+
+        \vspace{0.2 cm}
+
+        \begin{onecolentry}
+            \textbf{Technologies:} .NET, Microsoft SQL Server, XCode, Interface Builder
+        \end{onecolentry}
+
+
+
+           \section{Experience}
+
+
+
+        
+        \begin{twocolentry}{
+        \textit{Cupertino, CA}    
+            
+        \textit{June 2005 – Aug 2007}}
+            \textbf{Software Engineer}
+            
+            \textit{Apple}
+        \end{twocolentry}
+
+        \vspace{0.10 cm}
+        \begin{onecolentry}
+            \begin{highlights}
+                \item Reduced time to render user buddy lists by 75\% by implementing a prediction algorithm
+                \item Integrated iChat with Spotlight Search by creating a tool to extract metadata from saved chat transcripts and provide metadata to a system-wide search database
+                \item Redesigned chat file format and implemented backward compatibility for search
+            \end{highlights}
+        \end{onecolentry}
+
+
+        \vspace{0.2 cm}
+
+        \begin{twocolentry}{
+        \textit{Redmond, WA}    
+            
+        \textit{June 2003 – Aug 2003}}
+            \textbf{Software Engineer Intern}
+            
+            \textit{Microsoft}
+        \end{twocolentry}
+
+        \vspace{0.10 cm}
+        \begin{onecolentry}
+            \begin{highlights}
+                \item Designed a UI for the VS open file switcher (Ctrl-Tab) and extended it to tool windows
+                \item Created a service to provide gradient across VS and VS add-ins, optimizing its performance via caching
+                \item Built an app to compute the similarity of all methods in a codebase, reducing the time from $\mathcal{O}(n^2)$ to $\mathcal{O}(n \log n)$
+                \item Created a test case generation tool that creates random XML docs from XML Schema
+                \item Automated the extraction and processing of large datasets from legacy systems using SQL and Perl scripts
+            \end{highlights}
+        \end{onecolentry}
+
+
+ \section{Publications}
+
+
+
+        
+        \begin{samepage}
+            \begin{twocolentry}{
+                Jan 2004
+            }
+                \textbf{3D Finite Element Analysis of No-Insulation Coils}
+
+                \vspace{0.10 cm}
+
+                \mbox{Frodo Baggins}, \mbox{\textbf{\textit{John Doe}}}, \mbox{Samwise Gamgee}
+            \end{twocolentry}
+
+
+            \vspace{0.10 cm}
+
+            \begin{onecolentry}
+        \href{https://doi.org/10.1109/TASC.2023.3340648}{10.1109/TASC.2023.3340648}
+            \end{onecolentry}
+        \end{samepage}
+
+
+
+
+    
+
+\end{document}
